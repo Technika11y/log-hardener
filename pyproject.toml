@@ -1,0 +1,18 @@
+[project]
+name = "technika11y-log-hardener"
+version = "0.1.0a0"
+description = "Redacts PII and secrets (emails, IPs, SSNs, cards, tokens, keys) from log streams before they reach a SIEM. Also a --check gate."
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+keywords = ["pii", "redaction", "logs", "siem", "gdpr", "ccpa", "security"]
+
+[project.scripts]
+log-hardener = "loghardener.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["loghardener"]
