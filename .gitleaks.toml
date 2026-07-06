@@ -1,0 +1,11 @@
+# Keep the full default ruleset, but allowlist the test/example fixtures —
+# a redaction tool's fixtures deliberately contain fake PII and secrets.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "test and example fixtures contain intentional fake PII/secrets"
+paths = [
+  '''tests/''',
+  '''examples/''',
+]
