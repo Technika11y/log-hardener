@@ -1,7 +1,8 @@
 # Log-Aggregator Hardener
 
 > Strips PII and secrets from log streams **before they hit your SIEM** — emails, IPs, SSNs, card
-> numbers, JWTs, bearer tokens, AWS keys. Privacy compliance at the ingestion layer.
+> numbers, JWTs, bearer/AWS/GitHub/Google/Slack tokens, private keys, and `key=value` secrets.
+> Privacy compliance at the ingestion layer.
 >
 > Part of the **Technika11y** suite · *Root access for everyone.*
 
@@ -26,6 +27,9 @@ PYTHONPATH=src python3 -m loghardener.cli examples/sample.log
 | Capability | State |
 |---|---|
 | Redact: email, IPv4, US SSN, card numbers, JWT, bearer tokens, AWS keys | ✅ works, tested |
+| Redact secrets: private-key PEM headers, GitHub / Google / Slack tokens | ✅ works, tested |
+| Redact generic `key=value` secrets (`password=`, `api_key:` …), keeping the key name | ✅ works, tested |
+| Typed tokens keep their own label even inside a `key=value` (no double-wrapping) | ✅ works, tested |
 | Per-type match counts + multi-type lines | ✅ works, tested |
 | `--check` gate: exit 1 if any PII is present (no output) | ✅ works |
 | Streaming stdin / file input | ✅ works |

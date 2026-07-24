@@ -45,6 +45,43 @@ class RedactTests(unittest.TestCase):
         self.assertEqual(total.get("ipv4"), 1)
         self.assertEqual(total.get("ssn"), 1)
 
+    def test_private_key_header(self):
+        out, found = redact("-----BEGIN RSA PRIVATE KEY-----")
+        self.assertIn("[REDACTED:private_key]", out)
+        self.assertEqual(found.get("private_key"), 1)
+
+    def test_github_token(self):
+        out, _ = redact("cloned with ghp_" + "a" * 40)
+        self.assertIn("[REDACTED:github_token]", out)
+
+    def test_google_api_key(self):
+        out, _ = redact("key=AIza" + "b" * 35)
+        self.assertIn("[REDACTED:google_api_key]", out)
+
+    def test_slack_token(self):
+        out, _ = redact("slack xoxb-" + "c" * 20)
+        self.assertIn("[REDACTED:slack_token]", out)
+
+    def test_generic_secret_assignment_keeps_key_name(self):
+        out, found = redact("password=hunter2")
+        self.assertEqual(out, "password=[REDACTED:secret]")
+        self.assertEqual(found.get("secret"), 1)
+
+    def test_quoted_secret_value(self):
+        out, _ = redact('secret: "swordfish and more"')
+        self.assertIn("[REDACTED:secret]", out)
+
+    def test_typed_token_keeps_its_label_not_generic_secret(self):
+        # api_key= is a secret keyword, but the value is an AWS key — it must stay labelled aws_key.
+        out, found = redact("api_key=AKIAIOSFODNN7EXAMPLE")
+        self.assertIn("[REDACTED:aws_key]", out)
+        self.assertNotIn("[REDACTED:secret]", out)
+
+    def test_keyword_without_assignment_is_not_redacted(self):
+        out, found = redact("auth token refreshed for the session")
+        self.assertEqual(out, "auth token refreshed for the session")
+        self.assertEqual(found, {})
+
 
 if __name__ == "__main__":
     unittest.main()
