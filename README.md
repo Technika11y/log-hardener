@@ -31,6 +31,7 @@ PYTHONPATH=src python3 -m loghardener.cli examples/sample.log
 | Redact generic `key=value` secrets (`password=`, `api_key:` …), keeping the key name | ✅ works, tested |
 | Typed tokens keep their own label even inside a `key=value` (no double-wrapping) | ✅ works, tested |
 | Per-type match counts + multi-type lines | ✅ works, tested |
+| **Randomized property tests** — no generated secret survives; zero false positives on benign lines | ✅ works, tested |
 | `--check` gate: exit 1 if any PII is present (no output) | ✅ works |
 | Streaming stdin / file input | ✅ works |
 | IPv6, international phone/ID formats, Luhn validation, config-driven patterns | ⚠️ not built — [roadmap](#roadmap) |
